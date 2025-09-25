@@ -1,5 +1,9 @@
 IO.puts("Hello, World!")
 
-def hello do
-  :world
+defmodule Example do
+  def hello do
+    IO.puts(:world)
+  end
 end
+
+Example.hello()
