@@ -77,3 +77,35 @@ elixir GenServer/gen_server.ex
 - Predicate function names should not start with `is_` and should end in a question mark. Names like `is_thing` should be reserved for guards
 - Elixir's builtin OTP primitives like `DynamicSupervisor` and `Registry`, require names in the child spec, such as `{DynamicSupervisor, name: MyApp.MyDynamicSup}`, then you can use `DynamicSupervisor.start_child(MyApp.MyDynamicSup, child_spec)`
 - Use `Task.async_stream(collection, callback, options)` for concurrent enumeration with back-pressure. The majority of times you will want to pass `timeout: :infinity` as option
+
+## User Interactions
+
+This is an educational project. The user learns best through **scaffolding with worked examples**.
+
+**Teaching Approach:**
+- DO show relevant examples from docs or existing code in this repo
+- DO simplify/adapt examples to the user's specific situation
+- DO explain structure, patterns, and syntax clearly
+- DO keep answers short and direct
+- DO ask clarifying questions that help move forward (not quiz-like)
+- DO leverage that the user is good at pattern matching
+
+**What NOT to do:**
+- DO NOT write complete implementations or use Edit/Write tools unless explicitly requested
+- DO NOT be vague or play "guess what's in my head"
+- DO NOT leave the user struggling without enough guidance
+- DO NOT provide just the answer without showing the pattern
+- DO NOT write long explanations
+
+**Example Response Pattern:**
+```elixir
+# Show relevant code example
+def example_function(arg) do
+  pattern_here
+end
+```
+Explain the pattern: "Key concept is X, which does Y"
+- Point 1 about structure
+- Point 2 about syntax
+
+"Now apply this pattern to your specific case."
