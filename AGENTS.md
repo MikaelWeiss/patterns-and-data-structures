@@ -109,3 +109,289 @@ Explain the pattern: "Key concept is X, which does Y"
 - Point 2 about syntax
 
 "Now apply this pattern to your specific case."
+
+# Elixir LLM Reference
+
+Critical patterns and corrections for common LLM mistakes in Elixir.
+
+## 1. Pattern Matching Fundamentals
+
+### Match Operator (=) is NOT Assignment
+```elixir
+# WRONG thinking: x = 1 is assignment
+# RIGHT: x = 1 is pattern matching that binds x to 1
+x = 1          # Binds x to 1
+1 = x          # Matches, returns 1
+2 = x          # MatchError - no match of right hand side value: 1
+
+# Variables can be rebound
+x = 2          # x is now 2
+```
+
+### Pin Operator (^) for Existing Values
+```elixir
+x = 1
+^x = 1         # Matches
+^x = 2         # MatchError - x is already 1
+
+# In patterns
+{y, ^x} = {2, 1}   # y = 2, matches
+{y, ^x} = {2, 2}   # MatchError
+```
+
+### List Pattern Matching
+```elixir
+[head | tail] = [1, 2, 3]  # head = 1, tail = [2, 3]
+[1, 2, 3] = [1, 2, 3]      # Exact match
+[1 | rest] = []             # MatchError - empty list has no head
+```
+
+## 2. String vs Charlist Operations
+
+### CRITICAL: Concatenation Operators
+```elixir
+# Strings (UTF-8 binaries) - use <>
+"hello" <> " world"        # "hello world"
+
+# Charlists (lists of code points) - use ++
+~c"hello" ++ ~c" world"    # ~c"hello world"
+
+# WRONG - cross operations fail:
+"hello" ++ ~c" world"      # ArgumentError
+~c"hello" <> " world"      # ArgumentError
+```
+
+### String vs Charlist Conversion
+```elixir
+to_string(~c"hello")       # "hello"
+to_charlist("hello")       # ~c"hello"
+
+# Check types
+is_binary("hello")         # true
+is_list(~c"hello")         # true
+```
+
+### Multi-byte Character Pattern Matching
+```elixir
+# WRONG - matches byte by byte
+<<head>> = "über"          # head = 195 (first byte of ü)
+
+# RIGHT - use utf8 modifier
+<<head::utf8>> = "über"    # head = 252 (code point for ü)
+```
+
+## 3. Anonymous Functions
+
+### Definition and Calling
+```elixir
+# Definition
+add = fn a, b -> a + b end
+
+# CRITICAL: Use dot (.) for calling
+add.(1, 2)                 # 3
+
+# WRONG: add(1, 2) - named function call syntax
+```
+
+### Capture Operator (&)
+```elixir
+# Capture named function
+is_atom_fun = &is_atom/1
+is_atom_fun.(:hello)       # true
+
+# Shorthand with &1, &2...
+double = &(&1 * 2)
+double.(5)                 # 10
+
+# Equivalent to:
+double = fn x -> x * 2 end
+```
+
+## 4. Module System
+
+### Lexical Scope Directives
+```elixir
+defmodule MyModule do
+  # alias - local only in this module
+  alias String, as: Str
+
+  # require - needed for macros
+  require Integer
+
+  # import - brings functions in (use sparingly)
+  import List, only: [first: 1]
+
+  def my_func do
+    Str.length("hello")    # Using alias
+    Integer.is_odd(3)       # Required macro
+    first([1, 2, 3])       # Imported function
+  end
+end
+```
+
+### use vs import vs alias
+```elixir
+# use - invokes __using__ macro, injects code
+use GenServer
+
+# import - brings functions into current scope
+import String
+
+# alias - creates local name
+alias MyApp.{User, Post}
+```
+
+## 5. Boolean Operators
+
+### Strict (require booleans)
+```elixir
+true and true               # true
+false or true               # true
+not true                    # false
+
+# 1 and true               # BadBooleanError
+```
+
+### Truthy (work with any value)
+```elixir
+1 && true                   # 1 (returns first truthy)
+nil && 13                   # nil (returns first falsy)
+false || 1                  # 1 (returns first truthy)
+!nil                        # true
+!1                          # false (only nil and false are falsy)
+```
+
+## 6. Enum vs Stream
+
+### Enum (Eager)
+```elixir
+# All operations execute immediately
+[1, 2, 3]
+|> Enum.map(&(&1 * 2))      # [2, 4, 6]
+|> Enum.filter(&(&1 > 2))   # [4, 6]
+```
+
+### Stream (Lazy)
+```elixir
+# Operations build up, execute when needed
+[1, 2, 3]
+|> Stream.map(&(&1 * 2))     # Stream operation
+|> Stream.filter(&(&1 > 2))  # Stream operation
+|> Enum.to_list()            # Now executes: [4, 6]
+```
+
+## 7. Pipe Operator (|>)
+
+### Basic Usage
+```elixir
+# value |> function() is equivalent to function(value)
+"hello" |> String.upcase()  # "HELLO"
+# Same as: String.upcase("hello")
+
+# Chaining
+[1, 2, 3]
+|> Enum.map(&(&1 * 2))
+|> Enum.sum()               # 12
+```
+
+### Precedence Rules
+```elixir
+# Functions with multiple arguments
+[1, 2, 3] |> Enum.take(2)   # OK: Enum.take([1, 2, 3], 2)
+
+# For complex expressions, use parentheses
+"hello" |> String.replace("l", "L") |> String.upcase()
+```
+
+## 8. Common Guard Patterns
+
+### Available Guard Functions
+```elixir
+def func(x) when is_integer(x), do: :int
+def func(x) when is_binary(x), do: :binary
+def func(x) when x > 0, do: :positive
+
+# Custom guards
+defguard is_even(term) when is_integer(term) and rem(term, 2) == 0
+def func(x) when is_even(x), do: :even
+```
+
+### Guard Limitations
+```elixir
+# WRONG: Can't use regular functions in guards
+def func(x) when String.length(x) > 2, do: :too_long
+
+# RIGHT: Use built-in guard functions
+def func(x) when is_binary(x) and byte_size(x) > 2, do: :too_long
+```
+
+## 9. Maps and Structs
+
+### Map Pattern Matching
+```elixir
+# Subset matching - pattern keys must exist
+%{name: name} = %{name: "John", age: 30}  # name = "John"
+%{name: name, age: age} = %{name: "John"} # MatchError - age missing
+
+# Variable keys
+key = :name
+%{^key => value} = %{name: "John"}        # value = "John"
+```
+
+### Struct Patterns
+```elixir
+defmodule User do
+  defstruct [:name, :age]
+end
+
+# Must use struct name, field validation
+%User{name: name} = %User{name: "John", age: 30}
+```
+
+## 10. Common Syntax Mistakes
+
+### Atoms
+```elixir
+:atom                       # Correct atom
+"string"                    # String, not atom
+
+# Booleans and nil are atoms
+true == :true               # true
+false == :false             # true
+nil == :nil                 # true
+```
+
+### Function Arity
+```elixir
+# Functions identified by name/arity
+String.length/1             # Function with 1 argument
+String.replace/3            # Function with 3 arguments
+
+# Different arities are different functions
+String.length("hello")      # OK
+String.length("hello", :utf8)  # UndefinedFunctionError
+```
+
+### List Operations
+```elixir
+# Prepend to list
+[1 | [2, 3]]                # [1, 2, 3]
+[1, 2] ++ [3, 4]            # [1, 2, 3, 4]
+
+# WRONG: Can't prepend with ++
+[1] ++ [2, 3]               # [1, 2, 3] (works, but not prepend)
+```
+
+## Quick Reference Checklist
+
+- [ ] Using `<>` for strings, `++` for lists/charlists
+- [ ] Using dot (`.`) for anonymous function calls
+- [ ] Understanding `=` is pattern matching, not assignment
+- [ ] Using `^` to match against existing variable values
+- [ ] Using `and/or/`not` for booleans, `&&/||/!` for truthy values
+- [ ] Using `alias` over `import` in application code
+- [ ] Using `::utf8` for multibyte character patterns
+- [ ] Understanding guards have limited function availability
+- [ ] Maps do subset matching, structs require exact field names
+- [ ] Streams are lazy, Enum is eager
+
