@@ -1,9 +1,24 @@
 {
   "permissions": {
     "allow": [
-      "mcp__context7__resolve-library-id"
+      "mcp__context7__resolve-library-id",
+      "WebSearch",
+      "WebFetch(domain:www.anthropic.com)"
     ],
     "deny": [],
     "ask": []
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat /Users/mikaelweiss/code/elixir/patterns-and-data-structures/Elixir.md"
+          }
+        ]
+      }
+    ]
   }
 }
