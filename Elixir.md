@@ -242,6 +242,8 @@ end
 ```elixir
 :atom                       # Correct atom
 "string"                    # String, not atom
+:"atom with spaces"         # Correct atom
+"string again"              # String, not atom
 
 # Booleans and nil are atoms
 true == :true               # true
