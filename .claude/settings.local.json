@@ -15,7 +15,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cat /Users/mikaelweiss/code/elixir/patterns-and-data-structures/Elixir.md"
+            "command": "cat /Users/mikaelweiss/code/elixir/patterns-and-data-structures/ElixirLLM.md"
           }
         ]
       }
