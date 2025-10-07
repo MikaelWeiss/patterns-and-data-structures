@@ -1,0 +1,38 @@
+Phase 1: Core Elixir & Functional Thinking
+
+Elixir: Variables, Tuples, Lists, List BIFs
+Elixir: Stateless Functions
+
+Phase 2: Concurrency Basics
+
+Elixir: Processes
+Erlang: Stateful Functions
+
+Phase 3: Production-Ready Concurrency
+
+OTP: Supervisors
+OTP: gen_server
+OTP: gen_statem
+
+Phase 4: Data Structures (Simple to Advanced)
+
+Data Struct: Queues
+Data Struct: Deques
+Data Struct: Tries
+Data Struct: Binary Search Trees
+Data Struct: Red-Black Trees
+Data Struct: Leftist Min-Heaps
+Data Struct: Random Access Lists
+
+Phase 5: Patterns (Progressive Complexity)
+
+Patterns: Beautiful Code
+Patterns: Chaining
+Patterns: Factory Pattern
+Patterns: State Pattern
+Patterns: Memoization
+Patterns: Lazy Computation Pattern
+Patterns: Functors
+Patterns: Monads
+Patterns: Monoids
+
