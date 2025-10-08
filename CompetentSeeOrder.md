@@ -18,7 +18,7 @@ Phase 4: Data Structures (Simple to Advanced) - 7 Total
 
 ✅ Data Struct: Queues
 ✅ Data Struct: Deques
-Data Struct: Tries
+✅ Data Struct: Tries
 Data Struct: Binary Search Trees
 Data Struct: Red-Black Trees
 Data Struct: Leftist Min-Heaps
@@ -37,5 +37,5 @@ Patterns: Monads
 Patterns: Monoids
 
 ### Total Done:
-**9/23**
+**10/23**
 
