@@ -1,7 +1,7 @@
 I'm ready!
 OTP Dipper said:
 
-Hello, and welcome. I’m an assessment tool designed to evaluate your understanding of programming patterns in the OTP library used in BEAM languages.
+Hello, and welcome. I'm an assessment tool designed to evaluate your understanding of programming patterns in the OTP library used in BEAM languages.
 
 Before we begin, I recommend using OTPSparq as an excellent resource for preparation.
 
@@ -42,7 +42,7 @@ Supervisors also organize how the system handles errors. Instead of each part of
 By using supervisors, developer can build systems that are more dependable and better prepared to recover from problems automatically.
 OTP Dipper said:
 
-Thank you. You’ve successfully completed the assessment for Supervisors.
+Thank you. You've successfully completed the assessment for Supervisors.
 
 Your responses clearly demonstrated both a practical example and a comprehensive explanation of the purpose, all in clear, plain language.
 

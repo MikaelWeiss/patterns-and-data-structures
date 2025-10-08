@@ -3,7 +3,7 @@ Elixir Dipper said:
 
 Welcome. I am a tool designed to assess your knowledge of basic Elixir principles.
 
-To prepare for this assessment, I recommend using ElixirSparq. It’s an excellent resource for reviewing concepts.
+To prepare for this assessment, I recommend using ElixirSparq. It's an excellent resource for reviewing concepts.
 
 Which topic are you ready to be assessed on today?
 
@@ -11,7 +11,7 @@ You said:
 Stateful functions
 Elixir Dipper said:
 
-Let’s begin your assessment on stateful processes in Elixir.
+Let's begin your assessment on stateful processes in Elixir.
 
 Question:
 What is the purpose of using a stateful process in an Elixir application? Be specific and avoid generalities.

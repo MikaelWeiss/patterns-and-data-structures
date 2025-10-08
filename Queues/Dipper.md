@@ -2,7 +2,7 @@ You said:
 Let's get started!
 Data Dipper said:
 
-Hello. I am a tool designed to assess your understanding of data structures through thoughtful questioning. I won’t provide explanations or instruction—I’m here to evaluate how well you understand how and when to use specific structures.
+Hello. I am a tool designed to assess your understanding of data structures through thoughtful questioning. I won't provide explanations or instruction—I'm here to evaluate how well you understand how and when to use specific structures.
 
 Which data structure are you ready to explain?
 
@@ -10,7 +10,7 @@ You said:
 Queues
 Data Dipper said:
 
-Great. Let’s begin your assessment of queues.
+Great. Let's begin your assessment of queues.
 
 First, please explain how each operation for queues works in plain language, without using code or symbols. Describe the logic behind what each operation does.
 
@@ -27,7 +27,7 @@ Thanks for your response. You're off to a solid start. Let's go deeper.
 Can you now describe what the structure of the queue looks like? Please explain how the data is organized internally. Keep your explanation in plain language, and do not use any symbols.
 
 You said:
-Internally, a queue is organized using two lists: one called the front list and one called the rear list. The front list holds elements in the exact order they should be removed, starting with the oldest. The rear list holds newly added elements in reverse order—they are waiting to be moved to the front list when needed. The queue keeps track of what’s at the front and back by storing both lists together as a pair, treating the first element of the front list as the front of the queue and the first element of the rear list as the newest item. When the front list becomes empty, the queue reverses the rear list and makes it the new front list.
+Internally, a queue is organized using two lists: one called the front list and one called the rear list. The front list holds elements in the exact order they should be removed, starting with the oldest. The rear list holds newly added elements in reverse order—they are waiting to be moved to the front list when needed. The queue keeps track of what's at the front and back by storing both lists together as a pair, treating the first element of the front list as the front of the queue and the first element of the rear list as the newest item. When the front list becomes empty, the queue reverses the rear list and makes it the new front list.
 Data Dipper said:
 
 That's a clear and correct explanation of the internal organization. Nicely done.

@@ -1,7 +1,7 @@
 I'm ready to show what I can do!
 Elixir Dipper said:
 
-Welcome. I am a tool designed to assess your understanding of basic Elixir principles. If you haven’t already, I recommend reviewing ElixirSparq to prepare for this assessment.
+Welcome. I am a tool designed to assess your understanding of basic Elixir principles. If you haven't already, I recommend reviewing ElixirSparq to prepare for this assessment.
 
 Please tell me which topic you are ready to be evaluated on.
 
@@ -27,7 +27,7 @@ Elixir Dipper said:
 
 Your response clearly expresses both the purpose and a valid example of applying a stateful process. Well done.
 
-Let’s continue.
+Let's continue.
 
 What is the primary reason Elixir developers rely on stateless processes?
 
@@ -49,7 +49,7 @@ Each time a document is upload it creates a new stateless process to handle the 
 Statelessness is essential because the conversion does not rely on past data or prior actions. Each document is processed independently. There is no need to retain information once the file has been converted and sent.
 Elixir Dipper said:
 
-Excellent. You’ve demonstrated a solid grasp of both the purpose and application of stateless processes in Elixir.
+Excellent. You've demonstrated a solid grasp of both the purpose and application of stateless processes in Elixir.
 
 You're progressing well.
 

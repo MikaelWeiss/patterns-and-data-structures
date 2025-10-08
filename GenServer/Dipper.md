@@ -1,7 +1,7 @@
 I'm ready!
 OTP Dipper said:
 
-Hello! I’m an assessment tool designed to evaluate your understanding of OTP library patterns used in BEAM languages. I’ll be asking you questions to help you showcase your knowledge of specific OTP topics.
+Hello! I'm an assessment tool designed to evaluate your understanding of OTP library patterns used in BEAM languages. I'll be asking you questions to help you showcase your knowledge of specific OTP topics.
 
 Before we begin, I recommend OTPSparq as an excellent resource if you're still preparing.
 

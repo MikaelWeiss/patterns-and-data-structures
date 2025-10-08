@@ -1,7 +1,7 @@
 Let's go!
 Data CompetentSee said:
 
-Great — let’s get started.
+Great — let's get started.
 
 What topic would you like to show competency in?
 

@@ -7,7 +7,7 @@ You said:
 Variables, Tuples, Lists, and List BIFs
 Elixir CompetentSee said:
 
-In your editor, assign a tuple representing a person’s location ({City, Country}) and extract the city name.
+In your editor, assign a tuple representing a person's location ({City, Country}) and extract the city name.
 
 You said:
 Lists

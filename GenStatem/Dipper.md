@@ -2,7 +2,7 @@
 You said:
 I'm ready!
 OTP Dipper said:
-Hello! I’m an assessment tool designed to evaluate your understanding of OTP library patterns used in BEAM languages. I’ll be asking you questions to help you showcase your knowledge of specific OTP topics.
+Hello! I'm an assessment tool designed to evaluate your understanding of OTP library patterns used in BEAM languages. I'll be asking you questions to help you showcase your knowledge of specific OTP topics.
 
 Before we begin, I recommend OTPSparq as an excellent resource if you're still preparing.
 
@@ -11,7 +11,7 @@ Which topic are you ready to discuss?
 You said:
 gen_statem
 OTP Dipper said:
-Great! Let’s begin.
+Great! Let's begin.
 
 Please provide an exhaustive example of how this topic is applied in practice. Use plain, clear, and precise language. Do not include any code, symbolic notation, or figurative expressions.
 
@@ -31,7 +31,7 @@ Step 5: Automatically manage time-based behaviors. For example "close the gate i
 
 Step 6: Robust response to system commands and errors. GenStatem can jump to specific state like Gate Opening, reguardless of it's current state.
 OTP Dipper said:
-Thank you. Now let’s continue the assessment.
+Thank you. Now let's continue the assessment.
 
 Explain in detail the purpose of this topic. Use only plain, clear language. Avoid any code, symbolic notation, or figurative expressions.
 
@@ -47,6 +47,6 @@ This way, the process has a clear idea of what it's allowed to do at any given m
 What makes GenStatem different?
 Other types of processes don't keep track of their situations as clearly. GenStatem is special because it is designed for tracking different situations, reacting to events based on the current one, and moving between them in a safe and predictable way.
 OTP Dipper said:
-Thank you. You’ve successfully demonstrated a clear and complete understanding of both the application and purpose of this topic.
+Thank you. You've successfully demonstrated a clear and complete understanding of both the application and purpose of this topic.
 
 Would you like to continue with another topic? If so, please tell me which one.
