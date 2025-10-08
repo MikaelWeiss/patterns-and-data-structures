@@ -49,26 +49,36 @@ defmodule MyEpicTrie do
   end
 
   # Prefix
-  defp get_letters([]), do: []
-
-  defp get_letters(trie) do
-    Enum.map(trie, fn child -> get_letters(trie[child]) end)
+  def prefix(trie, prefix) do
+    case find_node(trie, prefix) do
+      :missing -> []
+      node -> depth_first(node, prefix, [])
+    end
   end
 
-  # At the last letter
-  def prefix(trie, [letter]) do
-    get_letters(trie)
+  defp find_node(trie, []), do: trie
+
+  defp find_node(trie, [head | tail]) do
+    case Map.get(trie, head) do
+      nil -> :missing
+      child -> find_node(child, tail)
+    end
   end
 
-  # Still more letters
-  def prefix(trie, [letter | rest]) do
-    children = trie[letter]
-    prefix(children, rest)
-  end
+  defp depth_first(trie, path, acc) do
+    acc =
+      if Map.has_key?(trie, :end) do
+        [List.to_string(path) | acc]
+      else
+        acc
+      end
 
-  # Start at the first letter
-  # Go to the last letter
-  # Find all children after the last letter
+    trie
+    |> Map.delete(:end)
+    |> Enum.reduce(acc, fn {head, child}, results ->
+      depth_first(child, path ++ [head], results)
+    end)
+  end
 end
 
 # Just so I understand the setup of a trie:
