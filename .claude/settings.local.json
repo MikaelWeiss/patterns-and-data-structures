@@ -3,7 +3,8 @@
     "allow": [
       "mcp__context7__resolve-library-id",
       "WebSearch",
-      "WebFetch(domain:www.anthropic.com)"
+      "WebFetch(domain:www.anthropic.com)",
+      "Bash(elixir:*)"
     ],
     "deny": [],
     "ask": []
