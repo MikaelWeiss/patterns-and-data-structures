@@ -15,6 +15,8 @@ defmodule MyEpicLeftistMinHeap do
    * Input: A Leftist Min-Heap and an element.
    * Output: A new Leftist Min-Heap with the element inserted.
   """
+  def insert(nil, element), do: %{rank: 0, value: element, next_left: nil, next_right: nil}
+
   def insert(heap, element),
     do: merge(heap, %{rank: 0, value: element, next_left: nil, next_right: nil})
 
@@ -40,11 +42,12 @@ defmodule MyEpicLeftistMinHeap do
   """
   def merge(nil, rheap), do: rheap
   def merge(lheap, nil), do: lheap
+  def merge(nil, nil), do: nil
 
   def merge(lheap, rheap) when lheap.value < rheap.value do
     # Min element is in the left heap. Merge right subtree of left heap with right heap
     new_right = merge(lheap.next_right, rheap)
-    new_right = %{new_right | rank: new_right.next_right.rank + 1}
+    new_right = %{new_right | rank: (get_in(new_right.next_right.rank) || 0) + 1}
 
     %{lheap | next_right: new_right}
     |> check_rank_and_possibly_swap
@@ -53,7 +56,8 @@ defmodule MyEpicLeftistMinHeap do
   def merge(lheap, rheap) do
     # Min element is in right heap. Merge right subtree of right heap with left heap
     new_right = merge(rheap.next_right, lheap)
-    new_right = %{new_right | rank: new_right.next_right.rank + 1}
+
+    new_right = %{new_right | rank: (get_in(new_right.next_right.rank) || 0) + 1}
 
     %{rheap | next_right: new_right}
     |> check_rank_and_possibly_swap
@@ -97,6 +101,8 @@ defmodule MyEpicLeftistMinHeap do
    * Input: A standard list of elements.
    * Output: A Leftist Min-Heap containing all the elements.
   """
+  def from_list([]), do: nil
+
   def from_list([h | t]),
     do: merge(%{rank: 0, value: h, next_left: nil, next_right: nil}, from_list(t))
 end
