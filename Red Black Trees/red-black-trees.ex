@@ -99,8 +99,12 @@ defmodule MyEpicRedBlackTree do
   """
   def contains(nil, _element), do: false
   def contains({_color, value, _left, _right}, element) when element == value, do: true
-  def contains({_color, value, left, _right}, element) when element < value, do: contains(left, element)
-  def contains({_color, value, _left, right}, element) when element > value, do: contains(right, element)
+
+  def contains({_color, value, left, _right}, element) when element < value,
+    do: contains(left, element)
+
+  def contains({_color, value, _left, right}, element) when element > value,
+    do: contains(right, element)
 
   @doc """
   Input: A Red-Black Tree and an element
@@ -424,7 +428,9 @@ defmodule MyEpicRedBlackTreeTest do
   ### TO LIST ###
 
   test "tolist" do
-    rbt = {:black, 5, {:red, 4, {:black, 3, nil, nil}, nil}, {:red, 6, nil, {:black, 7, nil, nil}}}
+    rbt =
+      {:black, 5, {:red, 4, {:black, 3, nil, nil}, nil}, {:red, 6, nil, {:black, 7, nil, nil}}}
+
     # In-order traversal produces sorted output
     assert RBT.to_list(rbt) == [3, 4, 5, 6, 7]
   end
@@ -457,13 +463,17 @@ defmodule MyEpicRedBlackTreeTest do
   end
 
   test "height 5 rbt" do
-    rbt = {:black, 1, {:red, 0, nil, nil}, {:red, 2, nil, {:black, 3, nil, {:red, 4, nil, {:black, 5, nil, nil}}}}}
+    rbt =
+      {:black, 1, {:red, 0, nil, nil},
+       {:red, 2, nil, {:black, 3, nil, {:red, 4, nil, {:black, 5, nil, nil}}}}}
+
     assert RBT.height(rbt) == 5
   end
 
   test "height 5 rbt left" do
     rbt =
-      {:black, 6, {:red, 5, {:black, 4, {:red, 3, {:black, 2, nil, nil}, nil}, nil}, nil}, {:red, 7, nil, {:black, 8, nil, {:red, 9, nil, nil}}}}
+      {:black, 6, {:red, 5, {:black, 4, {:red, 3, {:black, 2, nil, nil}, nil}, nil}, nil},
+       {:red, 7, nil, {:black, 8, nil, {:red, 9, nil, nil}}}}
 
     assert RBT.height(rbt) == 5
   end
@@ -480,12 +490,18 @@ defmodule MyEpicRedBlackTreeTest do
   end
 
   test "is balanced full tree false" do
-    rbt = {:black, 5, {:red, 4, {:black, 3, {:red, 2, nil, nil}, nil}, nil}, {:red, 9, {:black, 8, nil, nil}, nil}}
+    rbt =
+      {:black, 5, {:red, 4, {:black, 3, {:red, 2, nil, nil}, nil}, nil},
+       {:red, 9, {:black, 8, nil, nil}, nil}}
+
     assert RBT.is_balanced(rbt) == false
   end
 
   test "is balanced full tree true" do
-    rbt = {:black, 5, {:red, 4, {:black, 3, {:red, 2, nil, nil}, nil}, nil}, {:red, 9, {:black, 8, {:red, 7, nil, nil}, nil}, nil}}
+    rbt =
+      {:black, 5, {:red, 4, {:black, 3, {:red, 2, nil, nil}, nil}, nil},
+       {:red, 9, {:black, 8, {:red, 7, nil, nil}, nil}, nil}}
+
     assert RBT.is_balanced(rbt) == true
   end
 end
