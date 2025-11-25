@@ -9,13 +9,14 @@ defmodule MyEpicLeftistMinHeap do
   """
   def empty({}), do: true
   def empty(nil), do: true
-  def emtpy(_heap), do: false
+  def empty(_heap), do: false
 
   @doc """
    * Input: A Leftist Min-Heap and an element.
    * Output: A new Leftist Min-Heap with the element inserted.
   """
-  def insert(heap, element), do: merge(heap, %{0, element, nil, nil})
+  def insert(heap, element),
+    do: merge(heap, %{rank: 0, value: element, next_left: nil, next_right: nil})
 
   @doc """
    * Input: A Leftist Min-Heap.
@@ -58,9 +59,7 @@ defmodule MyEpicLeftistMinHeap do
     |> check_rank_and_possibly_swap
   end
 
-  @doc """
-  If the left's rank is less than the right, then swap them
-  """
+  # If the left's rank is less than the right, then swap them
   defp check_rank_and_possibly_swap(heap) when heap.next_left.rank < heap.next_right.rank do
     %{heap | next_left: heap.next_right, next_right: heap.next_left}
   end
@@ -71,7 +70,7 @@ defmodule MyEpicLeftistMinHeap do
    * Input: A Leftist Min-Heap.
    * Output: A list of elements sorted in ascending order.
   """
-  def to_list(heap) when heap.next_left == nil && heap.next_right == nil do
+  def to_list(heap) when heap.next_left == nil and heap.next_right == nil do
     [heap.value]
   end
 
@@ -86,10 +85,10 @@ defmodule MyEpicLeftistMinHeap do
   def to_list(heap) do
     left_list = to_list(heap.next_left)
     right_list = to_list(heap.next_right)
-    [heap.value | merge(left_list, right_list)]
+    [heap.value | merge_list(left_list, right_list)]
   end
 
-  defp merge(left_list, right_list) do
+  defp merge_list(left_list, right_list) do
     (left_list ++ right_list)
     |> Enum.sort()
   end
