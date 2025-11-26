@@ -36,7 +36,7 @@ defmodule MyEpicRandomAccessList do
   """
   def head([]), do: nil
 
-  def head([head | tail]), do: head.head
+  def head([head | _tail]), do: head.head
 
   @doc """
    * Input: A Random Access List.
@@ -93,7 +93,7 @@ defmodule MyEpicRandomAccessList do
     update([head.left], index - 1 - (head.size - 1) / 2, new_value)
   end
 
-  def update([head | _tail], index, new_value) when index > head.size, do: nil
+  def update([head | _tail], index, _new_value) when index > head.size, do: nil
 
   def update([head | _tail], index, new_value) do
     update([head.right], index - 1 - (head.size - 1) / 2, new_value)
