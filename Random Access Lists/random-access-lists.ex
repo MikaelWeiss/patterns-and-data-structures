@@ -7,7 +7,7 @@ defmodule MyEpicRandomAccessList do
    * Input: A Random Access List.
    * Output: `true` if the list is empty, `false` otherwise.
   """
-  def empty(rlist) when rlsit == [], do: true
+  def empty(rlist) when rlist == [], do: true
   def empty(_rlist), do: false
 
   @doc """
@@ -63,7 +63,7 @@ defmodule MyEpicRandomAccessList do
     lookup(tail, index - head.size)
   end
 
-  def lookup([head | _tail], index) when index == 0, do: head.element
+  def lookup([head | _tail], index) when index == 0, do: head.head
 
   def lookup([head | _tail], index) when (head.size - 1) / 2 < index do
     lookup([head.left], index - 1 - (head.size - 1) / 2)
@@ -86,7 +86,7 @@ defmodule MyEpicRandomAccessList do
   end
 
   def update([head | _tail], index, new_value) when index == 0 do
-    %{head: new_value, left: get_in(head.left), right: get_in(head.right), size: head.size}
+    %{head: new_value, left: head.left, right: head.right, size: head.size}
   end
 
   def update([head | _tail], index, new_value) when (head.size - 1) / 2 < index do
@@ -112,7 +112,7 @@ defmodule MyEpicRandomAccessList do
   defp tree_to_list(nil), do: []
 
   defp tree_to_list(tree) do
-    [tree.head | tree_to_list(get_in(tree.left) || []) ++ tree_to_list(get_in(tree.right) || [])]
+    [tree.head | tree_to_list(tree.left || []) ++ tree_to_list(tree.right || [])]
   end
 
   @doc """
