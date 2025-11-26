@@ -19,7 +19,7 @@ defmodule MyEpicRandomAccessList do
   end
 
   def cons(element, [first]) do
-    [%{head: element, left: nil, right: nil, size: 1} | first]
+    [%{head: element, left: nil, right: nil, size: 1}, first]
   end
 
   def cons(element, [first, second | tail]) when first.size == second.size do
@@ -64,16 +64,24 @@ defmodule MyEpicRandomAccessList do
     lookup(tail, index - head.size)
   end
 
-  def lookup([head | _tail], index) when index == 0, do: head.head
-
-  def lookup([head | _tail], index) when (head.size - 1) / 2 < index do
-    lookup([head.left], index - 1 - (head.size - 1) / 2)
-  end
-
-  def lookup([head | _tail], index) when index > head.size, do: nil
+  def lookup([head | _tail], index) when index >= head.size, do: nil
 
   def lookup([head | _tail], index) do
-    lookup([head.right], index - 1 - (head.size - 1) / 2)
+    lookup_tree(head, index)
+  end
+
+  defp lookup_tree(tree, 0), do: tree.head
+
+  defp lookup_tree(tree, _index) when tree.size == 1, do: nil
+
+  defp lookup_tree(tree, index) do
+    left_size = div(tree.size - 1, 2)
+
+    if index <= left_size do
+      lookup_tree(tree.left, index - 1)
+    else
+      lookup_tree(tree.right, index - 1 - left_size)
+    end
   end
 
   @doc """
@@ -83,21 +91,31 @@ defmodule MyEpicRandomAccessList do
   def update([], _index, _new_value), do: nil
 
   def update([head | tail], index, new_value) when head.size <= index and tail != [] do
-    update(tail, index - head.size, new_value)
+    [head | update(tail, index - head.size, new_value)]
   end
 
-  def update([head | _tail], index, new_value) when index == 0 do
-    %{head: new_value, left: head.left, right: head.right, size: head.size}
+  def update([head | _tail], index, _new_value) when index >= head.size do
+    nil
   end
 
-  def update([head | _tail], index, new_value) when (head.size - 1) / 2 < index do
-    update([head.left], index - 1 - (head.size - 1) / 2, new_value)
+  def update([head | tail], index, new_value) do
+    [update_tree(head, index, new_value) | tail]
   end
 
-  def update([head | _tail], index, _new_value) when index > head.size, do: nil
+  defp update_tree(tree, 0, new_value) do
+    %{tree | head: new_value}
+  end
 
-  def update([head | _tail], index, new_value) do
-    update([head.right], index - 1 - (head.size - 1) / 2, new_value)
+  defp update_tree(tree, _index, _new_value) when tree.size == 1, do: tree
+
+  defp update_tree(tree, index, new_value) do
+    left_size = div(tree.size - 1, 2)
+
+    if index <= left_size do
+      %{tree | left: update_tree(tree.left, index - 1, new_value)}
+    else
+      %{tree | right: update_tree(tree.right, index - 1 - left_size, new_value)}
+    end
   end
 
   @doc """
@@ -145,10 +163,13 @@ defmodule MyEpicRandomAccessListTest do
 
     test "returns false for non-empty list with multiple elements" do
       rlist =
-        []
-        |> MyEpicRandomAccessList.cons(3)
-        |> MyEpicRandomAccessList.cons(2)
-        |> MyEpicRandomAccessList.cons(1)
+        MyEpicRandomAccessList.cons(
+          1,
+          MyEpicRandomAccessList.cons(
+            2,
+            MyEpicRandomAccessList.cons(3, [])
+          )
+        )
 
       assert MyEpicRandomAccessList.empty(rlist) == false
     end
@@ -163,9 +184,10 @@ defmodule MyEpicRandomAccessListTest do
 
     test "adds element to single-element list" do
       rlist =
-        []
-        |> MyEpicRandomAccessList.cons(1)
-        |> MyEpicRandomAccessList.cons(2)
+        MyEpicRandomAccessList.cons(
+          2,
+          MyEpicRandomAccessList.cons(1, [])
+        )
 
       assert length(rlist) == 2
       assert MyEpicRandomAccessList.head(rlist) == 2
@@ -173,15 +195,17 @@ defmodule MyEpicRandomAccessListTest do
 
     test "combines two trees when sizes match" do
       rlist =
-        []
-        |> MyEpicRandomAccessList.cons(1)
-        |> MyEpicRandomAccessList.cons(2)
-        |> MyEpicRandomAccessList.cons(3)
+        MyEpicRandomAccessList.cons(
+          3,
+          MyEpicRandomAccessList.cons(
+            2,
+            MyEpicRandomAccessList.cons(1, [])
+          )
+        )
 
-      assert length(rlist) == 2
-      [first, second] = rlist
+      assert length(rlist) == 1
+      [first] = rlist
       assert first.size == 3
-      assert second.size == 1
     end
 
     test "maintains order with many elements" do
@@ -206,10 +230,13 @@ defmodule MyEpicRandomAccessListTest do
 
     test "returns first element for multi-element list" do
       rlist =
-        []
-        |> MyEpicRandomAccessList.cons(3)
-        |> MyEpicRandomAccessList.cons(2)
-        |> MyEpicRandomAccessList.cons(1)
+        MyEpicRandomAccessList.cons(
+          1,
+          MyEpicRandomAccessList.cons(
+            2,
+            MyEpicRandomAccessList.cons(3, [])
+          )
+        )
 
       assert MyEpicRandomAccessList.head(rlist) == 1
     end
@@ -235,10 +262,13 @@ defmodule MyEpicRandomAccessListTest do
 
     test "returns last element for multi-element list" do
       rlist =
-        []
-        |> MyEpicRandomAccessList.cons(3)
-        |> MyEpicRandomAccessList.cons(2)
-        |> MyEpicRandomAccessList.cons(1)
+        MyEpicRandomAccessList.cons(
+          1,
+          MyEpicRandomAccessList.cons(
+            2,
+            MyEpicRandomAccessList.cons(3, [])
+          )
+        )
 
       assert MyEpicRandomAccessList.tail(rlist) == 3
     end
@@ -339,10 +369,13 @@ defmodule MyEpicRandomAccessListTest do
 
     test "converts multiple elements in order" do
       rlist =
-        []
-        |> MyEpicRandomAccessList.cons(3)
-        |> MyEpicRandomAccessList.cons(2)
-        |> MyEpicRandomAccessList.cons(1)
+        MyEpicRandomAccessList.cons(
+          1,
+          MyEpicRandomAccessList.cons(
+            2,
+            MyEpicRandomAccessList.cons(3, [])
+          )
+        )
 
       result = MyEpicRandomAccessList.to_list(rlist) |> List.flatten()
       assert result == [1, 2, 3]
@@ -394,12 +427,19 @@ defmodule MyEpicRandomAccessListTest do
   describe "integration tests" do
     test "cons and lookup work together" do
       rlist =
-        []
-        |> MyEpicRandomAccessList.cons(5)
-        |> MyEpicRandomAccessList.cons(4)
-        |> MyEpicRandomAccessList.cons(3)
-        |> MyEpicRandomAccessList.cons(2)
-        |> MyEpicRandomAccessList.cons(1)
+        MyEpicRandomAccessList.cons(
+          1,
+          MyEpicRandomAccessList.cons(
+            2,
+            MyEpicRandomAccessList.cons(
+              3,
+              MyEpicRandomAccessList.cons(
+                4,
+                MyEpicRandomAccessList.cons(5, [])
+              )
+            )
+          )
+        )
 
       assert MyEpicRandomAccessList.lookup(rlist, 0) == 1
       assert MyEpicRandomAccessList.lookup(rlist, 1) == 2
@@ -418,11 +458,16 @@ defmodule MyEpicRandomAccessListTest do
 
     test "tree combining works correctly" do
       rlist =
-        []
-        |> MyEpicRandomAccessList.cons(1)
-        |> MyEpicRandomAccessList.cons(2)
-        |> MyEpicRandomAccessList.cons(3)
-        |> MyEpicRandomAccessList.cons(4)
+        MyEpicRandomAccessList.cons(
+          4,
+          MyEpicRandomAccessList.cons(
+            3,
+            MyEpicRandomAccessList.cons(
+              2,
+              MyEpicRandomAccessList.cons(1, [])
+            )
+          )
+        )
 
       assert MyEpicRandomAccessList.lookup(rlist, 0) == 4
       assert MyEpicRandomAccessList.lookup(rlist, 1) == 3
