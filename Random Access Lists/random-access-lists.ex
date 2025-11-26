@@ -57,6 +57,7 @@ defmodule MyEpicRandomAccessList do
    * Output: The element at the specified index.
    * Edge Case: Handle out-of-bounds indices properly.
   """
+  def lookup(_rlist, index) when index < 0, do: nil
   def lookup([], _index), do: nil
 
   def lookup([head | tail], index) when head.size <= index and tail != [] do
@@ -110,6 +111,7 @@ defmodule MyEpicRandomAccessList do
   end
 
   defp tree_to_list(nil), do: []
+  defp tree_to_list([]), do: []
 
   defp tree_to_list(tree) do
     [tree.head | tree_to_list(tree.left || []) ++ tree_to_list(tree.right || [])]
