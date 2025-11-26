@@ -125,3 +125,343 @@ defmodule MyEpicRandomAccessList do
   defp to_r_list([], rlist), do: rlist
   defp to_r_list([head | tail], rlist), do: to_r_list(tail, cons(head, rlist))
 end
+
+ExUnit.start()
+
+defmodule MyEpicRandomAccessListTest do
+  use ExUnit.Case, async: true
+
+  describe "empty/1" do
+    test "returns true for empty list" do
+      assert MyEpicRandomAccessList.empty([]) == true
+    end
+
+    test "returns false for non-empty list with one element" do
+      rlist = MyEpicRandomAccessList.cons(1, [])
+      assert MyEpicRandomAccessList.empty(rlist) == false
+    end
+
+    test "returns false for non-empty list with multiple elements" do
+      rlist =
+        []
+        |> MyEpicRandomAccessList.cons(3)
+        |> MyEpicRandomAccessList.cons(2)
+        |> MyEpicRandomAccessList.cons(1)
+
+      assert MyEpicRandomAccessList.empty(rlist) == false
+    end
+  end
+
+  describe "cons/2" do
+    test "adds element to empty list" do
+      rlist = MyEpicRandomAccessList.cons(1, [])
+      assert length(rlist) == 1
+      assert MyEpicRandomAccessList.head(rlist) == 1
+    end
+
+    test "adds element to single-element list" do
+      rlist =
+        []
+        |> MyEpicRandomAccessList.cons(1)
+        |> MyEpicRandomAccessList.cons(2)
+
+      assert length(rlist) == 2
+      assert MyEpicRandomAccessList.head(rlist) == 2
+    end
+
+    test "combines two trees when sizes match" do
+      rlist =
+        []
+        |> MyEpicRandomAccessList.cons(1)
+        |> MyEpicRandomAccessList.cons(2)
+        |> MyEpicRandomAccessList.cons(3)
+
+      assert length(rlist) == 2
+      [first, second] = rlist
+      assert first.size == 3
+      assert second.size == 1
+    end
+
+    test "maintains order with many elements" do
+      rlist =
+        1..10
+        |> Enum.reduce([], fn x, acc -> MyEpicRandomAccessList.cons(x, acc) end)
+
+      result = MyEpicRandomAccessList.to_list(rlist) |> List.flatten()
+      assert result == Enum.to_list(10..1//-1)
+    end
+  end
+
+  describe "head/1" do
+    test "returns nil for empty list" do
+      assert MyEpicRandomAccessList.head([]) == nil
+    end
+
+    test "returns first element for single-element list" do
+      rlist = MyEpicRandomAccessList.cons(42, [])
+      assert MyEpicRandomAccessList.head(rlist) == 42
+    end
+
+    test "returns first element for multi-element list" do
+      rlist =
+        []
+        |> MyEpicRandomAccessList.cons(3)
+        |> MyEpicRandomAccessList.cons(2)
+        |> MyEpicRandomAccessList.cons(1)
+
+      assert MyEpicRandomAccessList.head(rlist) == 1
+    end
+
+    test "returns most recently added element" do
+      rlist =
+        1..100
+        |> Enum.reduce([], fn x, acc -> MyEpicRandomAccessList.cons(x, acc) end)
+
+      assert MyEpicRandomAccessList.head(rlist) == 100
+    end
+  end
+
+  describe "tail/1" do
+    test "returns nil for empty list" do
+      assert MyEpicRandomAccessList.tail([]) == nil
+    end
+
+    test "returns only element for single-element list" do
+      rlist = MyEpicRandomAccessList.cons(42, [])
+      assert MyEpicRandomAccessList.tail(rlist) == 42
+    end
+
+    test "returns last element for multi-element list" do
+      rlist =
+        []
+        |> MyEpicRandomAccessList.cons(3)
+        |> MyEpicRandomAccessList.cons(2)
+        |> MyEpicRandomAccessList.cons(1)
+
+      assert MyEpicRandomAccessList.tail(rlist) == 3
+    end
+
+    test "returns first inserted element" do
+      rlist =
+        1..100
+        |> Enum.reduce([], fn x, acc -> MyEpicRandomAccessList.cons(x, acc) end)
+
+      assert MyEpicRandomAccessList.tail(rlist) == 1
+    end
+  end
+
+  describe "lookup/2" do
+    test "returns nil for empty list" do
+      assert MyEpicRandomAccessList.lookup([], 0) == nil
+      assert MyEpicRandomAccessList.lookup([], 5) == nil
+    end
+
+    test "returns element at index 0" do
+      rlist = MyEpicRandomAccessList.from_list([1, 2, 3, 4, 5])
+      assert MyEpicRandomAccessList.lookup(rlist, 0) == 5
+    end
+
+    test "returns elements at various indices" do
+      rlist = MyEpicRandomAccessList.from_list([1, 2, 3, 4, 5])
+
+      assert MyEpicRandomAccessList.lookup(rlist, 0) == 5
+      assert MyEpicRandomAccessList.lookup(rlist, 1) == 4
+      assert MyEpicRandomAccessList.lookup(rlist, 2) == 3
+      assert MyEpicRandomAccessList.lookup(rlist, 3) == 2
+      assert MyEpicRandomAccessList.lookup(rlist, 4) == 1
+    end
+
+    test "returns nil for out-of-bounds positive index" do
+      rlist = MyEpicRandomAccessList.from_list([1, 2, 3])
+      assert MyEpicRandomAccessList.lookup(rlist, 10) == nil
+    end
+
+    test "handles single element list" do
+      rlist = MyEpicRandomAccessList.cons(42, [])
+      assert MyEpicRandomAccessList.lookup(rlist, 0) == 42
+      assert MyEpicRandomAccessList.lookup(rlist, 1) == nil
+    end
+
+    test "handles large list with various indices" do
+      rlist = MyEpicRandomAccessList.from_list(Enum.to_list(1..100))
+
+      assert MyEpicRandomAccessList.lookup(rlist, 0) == 100
+      assert MyEpicRandomAccessList.lookup(rlist, 50) == 50
+      assert MyEpicRandomAccessList.lookup(rlist, 99) == 1
+      assert MyEpicRandomAccessList.lookup(rlist, 100) == nil
+    end
+  end
+
+  describe "update/3" do
+    test "returns nil for empty list" do
+      assert MyEpicRandomAccessList.update([], 0, 999) == nil
+    end
+
+    test "updates element at index 0" do
+      rlist = MyEpicRandomAccessList.from_list([1, 2, 3])
+      updated = MyEpicRandomAccessList.update(rlist, 0, 999)
+
+      assert updated != nil
+    end
+
+    test "returns nil for out-of-bounds index" do
+      rlist = MyEpicRandomAccessList.from_list([1, 2, 3])
+      assert MyEpicRandomAccessList.update(rlist, 10, 999) == nil
+    end
+
+    test "updates middle element" do
+      rlist = MyEpicRandomAccessList.from_list([1, 2, 3, 4, 5])
+      updated = MyEpicRandomAccessList.update(rlist, 2, 999)
+
+      assert updated != nil
+    end
+
+    test "updates single element list" do
+      rlist = MyEpicRandomAccessList.cons(42, [])
+      updated = MyEpicRandomAccessList.update(rlist, 0, 999)
+
+      assert updated != nil
+    end
+  end
+
+  describe "to_list/1" do
+    test "converts empty rlist to empty list" do
+      assert MyEpicRandomAccessList.to_list([]) == []
+    end
+
+    test "converts single element" do
+      rlist = MyEpicRandomAccessList.cons(42, [])
+      result = MyEpicRandomAccessList.to_list(rlist) |> List.flatten()
+      assert result == [42]
+    end
+
+    test "converts multiple elements in order" do
+      rlist =
+        []
+        |> MyEpicRandomAccessList.cons(3)
+        |> MyEpicRandomAccessList.cons(2)
+        |> MyEpicRandomAccessList.cons(1)
+
+      result = MyEpicRandomAccessList.to_list(rlist) |> List.flatten()
+      assert result == [1, 2, 3]
+    end
+
+    test "converts large list correctly" do
+      original = Enum.to_list(1..100)
+      rlist = MyEpicRandomAccessList.from_list(original)
+      result = MyEpicRandomAccessList.to_list(rlist) |> List.flatten()
+
+      assert result == Enum.reverse(original)
+    end
+  end
+
+  describe "from_list/1" do
+    test "converts empty list" do
+      assert MyEpicRandomAccessList.from_list([]) == []
+    end
+
+    test "converts single element" do
+      rlist = MyEpicRandomAccessList.from_list([42])
+      assert MyEpicRandomAccessList.head(rlist) == 42
+      assert MyEpicRandomAccessList.tail(rlist) == 42
+    end
+
+    test "converts multiple elements" do
+      rlist = MyEpicRandomAccessList.from_list([1, 2, 3, 4, 5])
+      assert MyEpicRandomAccessList.head(rlist) == 5
+      assert MyEpicRandomAccessList.tail(rlist) == 1
+    end
+
+    test "roundtrip conversion preserves elements" do
+      original = [1, 2, 3, 4, 5]
+      rlist = MyEpicRandomAccessList.from_list(original)
+      result = MyEpicRandomAccessList.to_list(rlist) |> List.flatten()
+
+      assert result == Enum.reverse(original)
+    end
+
+    test "handles large lists" do
+      original = Enum.to_list(1..1000)
+      rlist = MyEpicRandomAccessList.from_list(original)
+
+      assert MyEpicRandomAccessList.head(rlist) == 1000
+      assert MyEpicRandomAccessList.tail(rlist) == 1
+    end
+  end
+
+  describe "integration tests" do
+    test "cons and lookup work together" do
+      rlist =
+        []
+        |> MyEpicRandomAccessList.cons(5)
+        |> MyEpicRandomAccessList.cons(4)
+        |> MyEpicRandomAccessList.cons(3)
+        |> MyEpicRandomAccessList.cons(2)
+        |> MyEpicRandomAccessList.cons(1)
+
+      assert MyEpicRandomAccessList.lookup(rlist, 0) == 1
+      assert MyEpicRandomAccessList.lookup(rlist, 1) == 2
+      assert MyEpicRandomAccessList.lookup(rlist, 2) == 3
+      assert MyEpicRandomAccessList.lookup(rlist, 3) == 4
+      assert MyEpicRandomAccessList.lookup(rlist, 4) == 5
+    end
+
+    test "from_list and lookup work together" do
+      list = [10, 20, 30, 40, 50]
+      rlist = MyEpicRandomAccessList.from_list(list)
+
+      assert MyEpicRandomAccessList.lookup(rlist, 0) == 50
+      assert MyEpicRandomAccessList.lookup(rlist, 4) == 10
+    end
+
+    test "tree combining works correctly" do
+      rlist =
+        []
+        |> MyEpicRandomAccessList.cons(1)
+        |> MyEpicRandomAccessList.cons(2)
+        |> MyEpicRandomAccessList.cons(3)
+        |> MyEpicRandomAccessList.cons(4)
+
+      assert MyEpicRandomAccessList.lookup(rlist, 0) == 4
+      assert MyEpicRandomAccessList.lookup(rlist, 1) == 3
+      assert MyEpicRandomAccessList.lookup(rlist, 2) == 2
+      assert MyEpicRandomAccessList.lookup(rlist, 3) == 1
+    end
+
+    test "empty check after operations" do
+      rlist = MyEpicRandomAccessList.from_list([1, 2, 3])
+      assert MyEpicRandomAccessList.empty(rlist) == false
+
+      empty = MyEpicRandomAccessList.from_list([])
+      assert MyEpicRandomAccessList.empty(empty) == true
+    end
+  end
+
+  describe "edge cases" do
+    test "handles nil values in list" do
+      rlist = MyEpicRandomAccessList.from_list([nil, 1, nil, 2])
+      assert MyEpicRandomAccessList.lookup(rlist, 0) == 2
+      assert MyEpicRandomAccessList.lookup(rlist, 1) == nil
+    end
+
+    test "handles different data types" do
+      rlist = MyEpicRandomAccessList.from_list([:atom, "string", 42, 3.14, %{key: "value"}])
+      assert MyEpicRandomAccessList.head(rlist) == %{key: "value"}
+      assert MyEpicRandomAccessList.tail(rlist) == :atom
+    end
+
+    test "handles very large lists efficiently" do
+      large_list = Enum.to_list(1..10000)
+      rlist = MyEpicRandomAccessList.from_list(large_list)
+
+      assert MyEpicRandomAccessList.lookup(rlist, 0) == 10000
+      assert MyEpicRandomAccessList.lookup(rlist, 5000) == 5000
+      assert MyEpicRandomAccessList.lookup(rlist, 9999) == 1
+    end
+
+    test "lookup with negative index returns nil" do
+      rlist = MyEpicRandomAccessList.from_list([1, 2, 3])
+      assert MyEpicRandomAccessList.lookup(rlist, -1) == nil
+    end
+  end
+end
